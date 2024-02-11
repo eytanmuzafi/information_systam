@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Service Garage App</title>
+</head>
+<body>
+
+  <h1>Welcome to the Car Service Garage App</h1>
+
+  <!-- Login Form -->
+  <form id="loginForm">
+    <label for="userType">Login as:</label>
+    <select id="userType" name="userType" required>
+      <option value="employee">Employee</option>
+      <option value="client">Client</option>
+    </select>
+    <input type="submit" value="Login">
+  </form>
+
+  <!-- New Order Form for Clients -->
+  <div id="newOrderForm" style="display:none;">
+    <h2>New Order Form</h2>
+    <form action="/submit_order" method="post">
+      <label for="orderDescription">Description:</label>
+      <input type="text" id="orderDescription" name="orderDescription" required>
+
+      <br>
+
+      <label for="clientId">Client ID:</label>
+      <input type="text" id="clientId" name="clientId" required>
+
+      <br>
+
+      <label for="clientName">Client Name:</label>
+      <input type="text" id="clientName" name="clientName" required>
+
+      <br>
+
+      <label for="clientPhone">Client Phone:</label>
+      <input type="tel" id="clientPhone" name="clientPhone" required>
+
+      <br>
+
+      <input type="submit" value="Submit Order">
+    </form>
+  </div>
+
+  <script>
+    // JavaScript to handle form visibility based on user type
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var userType = document.getElementById('userType').value;
+
+      if (userType === 'client') {
+        document.getElementById('newOrderForm').style.display = 'block';
+      } else {
+        // Handle employee login logic or redirect to employee dashboard
+      }
+    });
+  </script>
+
+</body>
+</html>
