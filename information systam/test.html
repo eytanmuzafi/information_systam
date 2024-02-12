@@ -4,6 +4,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Car Service Garage App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    #newOrderForm, #employeeDashboard, #orderList, #inventoryList, #orderDetails, #customerOffer {
+      display: none;
+    }
+
+    .orderList, .inventoryList {
+      max-width: 400px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #orderList ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #orderList li {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
 
@@ -20,46 +85,125 @@
   </form>
 
   <!-- New Order Form for Clients -->
-  <div id="newOrderForm" style="display:none;">
+  <div id="newOrderForm">
     <h2>New Order Form</h2>
-    <form action="/submit_order" method="post">
+    <form id="clientOrderForm">
       <label for="orderDescription">Description:</label>
       <input type="text" id="orderDescription" name="orderDescription" required>
-
-      <br>
 
       <label for="clientId">Client ID:</label>
       <input type="text" id="clientId" name="clientId" required>
 
-      <br>
-
       <label for="clientName">Client Name:</label>
       <input type="text" id="clientName" name="clientName" required>
 
-      <br>
-
       <label for="clientPhone">Client Phone:</label>
       <input type="tel" id="clientPhone" name="clientPhone" required>
-
-      <br>
 
       <input type="submit" value="Submit Order">
     </form>
   </div>
 
+  <!-- Employee Dashboard -->
+  <div id="employeeDashboard">
+    <h2>Employee Dashboard</h2>
+    <button onclick="showOrderList()">View Orders</button>
+    <button onclick="showInventoryList()">View Inventory</button>
+  </div>
+
+  <!-- Order List Page -->
+  <div id="orderList" class="orderList">
+    <h2>Order List</h2>
+    <ul id="orders">
+      <!-- Orders will be dynamically added here -->
+    </ul>
+  </div>
+
+  <!-- Inventory List Page -->
+  <div id="inventoryList" class="inventoryList">
+    <!-- Display a list of inventory items here -->
+  </div>
+
+  <!-- Order Details Page -->
+  <div id="orderDetails">
+    <!-- Display details of a specific order here -->
+    <button onclick="showCustomerOffer()">Send Customer Offer</button>
+  </div>
+
+  <!-- Customer Offer Page -->
+  <div id="customerOffer">
+    <!-- Display customer offer details and options here -->
+    <button onclick="confirmOffer()">Confirm</button>
+    <button onclick="cancelOffer()">Cancel</button>
+    <button onclick="editDate()">Edit Date</button>
+  </div>
+
   <script>
+    // Simulated data storage for orders
+    const orders = [];
+
     // JavaScript to handle form visibility based on user type
     document.getElementById('loginForm').addEventListener('submit', function (event) {
       event.preventDefault();
       var userType = document.getElementById('userType').value;
 
+      // Reset all sections to hide
+      document.getElementById('newOrderForm').style.display = 'none';
+      document.getElementById('employeeDashboard').style.display = 'none';
+      document.getElementById('orderList').style.display = 'none';
+      document.getElementById('inventoryList').style.display = 'none';
+      document.getElementById('orderDetails').style.display = 'none';
+      document.getElementById('customerOffer').style.display = 'none';
+
+      // Show the relevant section based on the selected user type
       if (userType === 'client') {
         document.getElementById('newOrderForm').style.display = 'block';
       } else {
-        // Handle employee login logic or redirect to employee dashboard
+        document.getElementById('employeeDashboard').style.display = 'block';
       }
     });
-  </script>
+
+    // Function to handle client order submission
+    document.getElementById('clientOrderForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      // Collect order information
+      var order = {
+        description: document.getElementById('orderDescription').value,
+        clientId: document.getElementById('clientId').value,
+        clientName: document.getElementById('clientName').value,
+        clientPhone: document.getElementById('clientPhone').value,
+      };
+
+      // Store the order
+      orders.push(order);
+
+      // Reset the form
+      document.getElementById('clientOrderForm').reset();
+
+      // Update the order list in the employee dashboard
+      updateOrderList();
+    });
+
+    // Function to update the order list in the employee dashboard
+    function updateOrderList() {
+      var ordersContainer = document.getElementById('orders');
+      ordersContainer.innerHTML = ''; // Clear existing list
+
+      orders.forEach(function (order) {
+        var listItem = document.createElement('li');
+        listItem.textContent = `Order: ${order.description}, Client ID: ${order.clientId}, Client Name: ${order.clientName}, Client Phone: ${order.clientPhone}`;
+        ordersContainer.appendChild(listItem);
+      });
+
+      // Show the order list in the employee dashboard
+      document.getElementById('orderList').style.display = 'block';
+    }
+
+    // Functions to show/hide pages
+    function showOrderList() {
+      updateOrderList(); }// Update the order list before showing
+ </script>
 
 </body>
 </html>
