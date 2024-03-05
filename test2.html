@@ -14,6 +14,14 @@
 
     h1, h2 {
       text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #logo {
+      max-width: 300px;
+      margin: 0;
+      display: block;
+      float: left;
     }
 
     form {
@@ -47,16 +55,16 @@
       background-color: #45a049;
     }
 
-    #newOrderForm, #employeeDashboard, #orderList, #orderDetails, #customerOffer, #stockPage, #quotePage {
+    #newOrderForm, #employeeDashboard, #orderList, #stockPage,#fillDetailsPage {
       display: none;
     }
 
     .orderList {
-      max-width: 400px;
+      max-width: 1000px;
       margin: 20px auto;
       background-color: #fff;
       padding: 20px;
-      border-radius: 8px;
+      border-radius: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
@@ -68,6 +76,28 @@
     #orderList li {
       margin-bottom: 10px;
     }
+
+    #orderTable {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    #orderTable th, #orderTable td {
+      border: 4px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    #orderTable th {
+      background-color: #4caf50;
+      color: #fff;
+    }
+
+    #orderTable tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
 
     #stockTable {
       width: 100%;
@@ -81,14 +111,12 @@
       text-align: left;
     }
 
-    #quoteForm {
-      max-width: 600px;
-    }
   </style>
 </head>
 <body>
 
-  <h1>Welcome to the Car Service Garage App</h1>
+  <h1>ברוכים הבאים למוסך ישי כהן ובניו</h1>
+  <img id="logo" src="https://github.com/eytanmuzafi/information_systam/raw/main/logogerege.png" alt="Garage Logo">
 
   <!-- Login Form -->
   <form id="loginForm">
@@ -117,6 +145,12 @@
       <label for="clientPhone">Client Phone:</label>
       <input type="tel" id="clientPhone" name="clientPhone" required>
 
+      <label for="cartype">Car Type:</label>
+      <input type="tel" id="cartype" name="cartype" required>
+
+      <label for="carNumber">Car Number:</label>
+      <input type="tel" id="carNumber" name="carNumber" required>
+
       <label for="orderDescription">Description:</label>
       <input type="text" id="orderDescription" name="orderDescription" required>
 
@@ -129,29 +163,29 @@
     <h2>Employee Dashboard</h2>
     <button onclick="showOrderList()">View Orders</button>
     <button onclick="showStockPage()">Stock Page</button>
-    <button onclick="showQuotePage()">Quote Page</button>
+    <button onclick="showFillDetailsPage()">Filling Details for Existing Order</button>
   </div>
 
   <!-- Order List Page -->
   <div id="orderList" class="orderList">
-    <h2>Order List</h2>
-    <ul id="orders">
+  <h2>Order List</h2>
+  <table id="orderTable">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Client Name</th>
+        <th>Client Phone</th>
+        <th>Car Type</th>
+        <th>Car Number</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody id="orders">
       <!-- Orders will be dynamically added here -->
-    </ul>
-  </div>
-
-  <!-- Order Details Page -->
-  <div id="orderDetails">
-    <!-- Display details of a specific order here -->
-    <button onclick="showCustomerOffer()">Send Customer Offer</button>
-  </div>
-
-  <!-- Customer Offer Page -->
-  <div id="customerOffer">
-    <!-- Display customer offer details and options here -->
-    <button onclick="confirmOffer()">Confirm</button>
-    <button onclick="cancelOffer()">Cancel</button>
-    <button onclick="editDate()">Edit Date</button>
+    </tbody>
+  </table>
   </div>
 
   <!-- Stock Page -->
@@ -163,21 +197,38 @@
           <th>Item Name</th>
           <th>Quantity</th>
           <th>Cost</th>
+          <th>how many use?</th>
         </tr>
       </thead>
       <tbody>
+      <tr>
+          <td>Oil Filter</td>
+          <td>100</td>
+          <td>$5.00</td>
+          <td><button onclick="useStock(this)">Use</button></td>
+        </tr>
+        <tr>
+          <td>Brake Pads</td>
+          <td>50</td>
+          <td>$20.00</td>
+          <td><button onclick="useStock(this)">Use</button></td>
+        </tr>
         <!-- Stock items will be dynamically added here -->
       </tbody>
     </table>
     <button onclick="reportStockShortage()">Report Stock Shortage</button>
   </div>
 
-  <!-- Quote Page -->
-  <div id="quotePage">
-    <h2>Quote Page</h2>
-    <form id="quoteForm">
-      <label for="parts">Parts:</label>
-      <input type="text" id="parts" name="parts" required>
+  <!-- Filling Details for Existing Order Page -->
+  <div id="fillDetailsPage">
+    <h2>Filling Details for Existing Order</h2>
+
+    <form id="fillDetailsForm">
+      <label for="existingOrderId">Order ID:</label>
+      <input type="text" id="existingOrderId" name="existingOrderId" required>
+
+      <label for="Partsneeded">Parts needed:</label>
+      <input type="text" id="Partsneeded" name="Partsneeded" required>
 
       <label for="workingHours">Working Hours:</label>
       <input type="text" id="workingHours" name="workingHours" required>
@@ -185,7 +236,7 @@
       <label for="timeSpent">Time Spent in Garage:</label>
       <input type="text" id="timeSpent" name="timeSpent" required>
 
-      <input type="submit" value="Send Quote">
+      <input type="submit" value="Fill Details">
     </form>
   </div>
 
@@ -200,15 +251,12 @@
       document.getElementById('newOrderForm').style.display = 'none';
       document.getElementById('employeeDashboard').style.display = 'none';
       document.getElementById('orderList').style.display = 'none';
-      document.getElementById('orderDetails').style.display = 'none';
-      document.getElementById('customerOffer').style.display = 'none';
       document.getElementById('stockPage').style.display = 'none';
-      document.getElementById('quotePage').style.display = 'none';
+      document.getElementById('fillDetailsPage').style.display = 'none';
 
       // Check user type and show the relevant section
       if (userType === 'employee') {
         document.getElementById('employeeDashboard').style.display = 'block';
-        showOrderList(); // Automatically show order list for employees
       } else if (userType === 'client') {
         document.getElementById('newOrderForm').style.display = 'block';
       }
@@ -218,46 +266,110 @@
       event.preventDefault();
       var clientName = document.getElementById('clientName').value;
       var clientPhone = document.getElementById('clientPhone').value;
+      var carType = document.getElementById('cartype').value;
+      var carNumber = document.getElementById('carNumber').value;
       var orderDescription = document.getElementById('orderDescription').value;
 
       // Simulate creating a new order and add it to the orders array
-      var newOrder = { clientName: clientName, clientPhone: clientPhone, orderDescription: orderDescription };
+      var newOrder = {
+        clientName: clientName,
+        clientPhone: clientPhone,
+        carType: carType,
+        carNumber: carNumber,
+        orderDescription: orderDescription
+      };
       orders.push(newOrder);
 
       // Reset the form
       document.getElementById('clientOrderForm').reset();
 
-      // Optional: Show a confirmation message to the client
+      //Show a confirmation message to the client
       alert('Order submitted successfully!');
-
-      // You can redirect the client to another page or perform other actions as needed
     });
 
     function showOrderList() {
-      // Function to fetch and display orders for employees
-      var orderList = document.getElementById('orderList');
-      orderList.innerHTML = '<h2>Order List</h2><ul>';
-      orders.forEach(function (order) {
-        orderList.innerHTML += '<li>' + order.clientName + ': ' + order.orderDescription + '</li>';
-      });
-      orderList.innerHTML += '</ul>';
-      document.getElementById('orderList').style.display = 'block';
-    }
+    // Function to fetch and display orders for employees
+    var orderTable = document.getElementById('orderTable');
+    orderTable.innerHTML = '<thead><tr>' +
+      '<th>Order ID</th>' +
+      '<th>Client Name</th>' +
+      '<th>Client Phone</th>' +
+      '<th>Car Type</th>' +
+      '<th>Car Number</th>' +
+      '<th>Description</th>' +
+      '<th>Status</th>' +
+      '<th>Treatmentarrivaltime</th>' +
+      '</tr></thead><tbody>';
 
+    orders.forEach(function (order, index) {
+      // status and time for orders. need to get the status from the customer, and the time from the garage calendar!
+      var status = 'customer_approve';
+      var Treatmentarrivaltime = '10:00 am 12.4.2024';
 
+      orderTable.innerHTML += '<tr>' +
+        '<td>' + (index + 1) + '</td>' +
+        '<td>' + order.clientName + '</td>' +
+        '<td>' + order.clientPhone + '</td>' +
+        '<td>' + order.carType + '</td>' +
+        '<td>' + order.carNumber + '</td>' +
+        '<td>' + order.orderDescription + '</td>' +
+        '<td>' + status + '</td>' +
+        '<td>' + Treatmentarrivaltime + '</td>' +
+        '</tr>';
+    });
+
+    orderTable.innerHTML += '</tbody>';
+    document.getElementById('orderList').style.display = 'block';
+  }
 
     function showStockPage() {
       document.getElementById('stockPage').style.display = 'block';
     }
 
-    function showQuotePage() {
-      document.getElementById('quotePage').style.display = 'block';
+    function showFillDetailsPage() {
+      document.getElementById('fillDetailsPage').style.display = 'block';
     }
 
     function reportStockShortage() {
-      // Logic to report stock shortage
-      // ...
     }
+
+    //function for filling details for an existing order
+    document.getElementById('fillDetailsForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var existingOrderId = document.getElementById('existingOrderId').value;
+
+      // Reset the form
+      document.getElementById('fillDetailsForm').reset();
+
+      // Optional: Show a confirmation message or perform other actions as needed
+      alert('Details filled for existing order successfully!');
+    });
+
+    //function to update the stock
+    function useStock(button) {
+    // Prompt the user to enter the quantity used
+    var quantityUsed = parseInt(prompt("Enter the quantity used:", "0"));
+
+    if (!isNaN(quantityUsed) && quantityUsed >= 0) {
+      // Update the quantity used in the table
+      var row = button.parentNode.parentNode;
+      var availableCell = row.cells[1];
+      var quantityRemaining = parseInt(availableCell.innerText);
+
+      if (quantityRemaining >= quantityUsed) {
+        // Subtract the quantity used from the available quantity
+        availableCell.innerText = quantityRemaining - quantityUsed;
+        // Update the quantity used in the table
+        row.cells[5].innerText = quantityUsed;
+
+        alert("Stock used successfully!");
+      } else {
+        alert("Not enough stock available!");
+      }
+    } else {
+      alert("Please enter a valid quantity.");
+    }
+  }
   </script>
 
 </body>
